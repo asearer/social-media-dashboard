@@ -66,6 +66,17 @@ const GrowthAnalytics = () => {
       {/* Line chart */}
       <svg ref={svgRef} style={{ width: '100%', height: 300 }}></svg>
 
+      {/* Tooltip */}
+      <div id="tooltip" style={{
+        position: 'absolute',
+        backgroundColor: '#333',
+        color: '#fff',
+        padding: '5px',
+        borderRadius: '4px',
+        pointerEvents: 'none',
+        visibility: 'hidden',
+      }}></div>
+
       <Typography 
         variant="h6" 
         gutterBottom 
@@ -139,62 +150,51 @@ const drawLineChart = (node, data) => {
     .selectAll('text')
     .style('fill', '#e0e0e0');
 
-  // Week-over-Week line and points
-  g.append('path')
-    .datum(data.weekOverWeek)
-    .attr('fill', 'none')
-    .attr('stroke', '#ff5733')
-    .attr('stroke-width', 2)
-    .attr('d', lineGenerator);
+  // Tooltip
+  const tooltip = d3.select('#tooltip');
 
-  g.selectAll('.wow-point')
-    .data(data.weekOverWeek)
-    .enter()
-    .append('circle')
-    .attr('class', 'wow-point')
-    .attr('cx', (d, i) => xScale(data.services[i]))
-    .attr('cy', d => yScale(d))
-    .attr('r', 4)
-    .attr('fill', '#ff5733');
+  const drawLineAndPoints = (dataSet, color, className) => {
+    // Draw the line
+    g.append('path')
+      .datum(dataSet)
+      .attr('fill', 'none')
+      .attr('stroke', color)
+      .attr('stroke-width', 2)
+      .attr('d', lineGenerator);
 
-  // Month-over-Month line and points
-  g.append('path')
-    .datum(data.monthOverMonth)
-    .attr('fill', 'none')
-    .attr('stroke', '#33ff57')
-    .attr('stroke-width', 2)
-    .attr('d', lineGenerator);
+    // Draw the points
+    g.selectAll(`.${className}-point`)
+      .data(dataSet)
+      .enter()
+      .append('circle')
+      .attr('class', `${className}-point`)
+      .attr('cx', (d, i) => xScale(data.services[i]))
+      .attr('cy', d => yScale(d))
+      .attr('r', 4)
+      .attr('fill', color)
+      .on('mouseover', (event, d) => {
+        tooltip.style('visibility', 'visible')
+          .text(`${d}%`);
+        d3.select(event.target).attr('r', 6); // Enlarge the point on hover
+      })
+      .on('mousemove', (event) => {
+        tooltip.style('top', `${event.pageY - 10}px`)
+          .style('left', `${event.pageX + 10}px`);
+      })
+      .on('mouseout', (event) => {
+        tooltip.style('visibility', 'hidden');
+        d3.select(event.target).attr('r', 4); // Reset point size
+      });
+  };
 
-  g.selectAll('.mom-point')
-    .data(data.monthOverMonth)
-    .enter()
-    .append('circle')
-    .attr('class', 'mom-point')
-    .attr('cx', (d, i) => xScale(data.services[i]))
-    .attr('cy', d => yScale(d))
-    .attr('r', 4)
-    .attr('fill', '#33ff57');
-
-  // Year-over-Year line and points
-  g.append('path')
-    .datum(data.yearOverYear)
-    .attr('fill', 'none')
-    .attr('stroke', '#3357ff')
-    .attr('stroke-width', 2)
-    .attr('d', lineGenerator);
-
-  g.selectAll('.yoy-point')
-    .data(data.yearOverYear)
-    .enter()
-    .append('circle')
-    .attr('class', 'yoy-point')
-    .attr('cx', (d, i) => xScale(data.services[i]))
-    .attr('cy', d => yScale(d))
-    .attr('r', 4)
-    .attr('fill', '#3357ff');
+  // Draw all lines and points with tooltips
+  drawLineAndPoints(data.weekOverWeek, '#ff5733', 'wow');
+  drawLineAndPoints(data.monthOverMonth, '#33ff57', 'mom');
+  drawLineAndPoints(data.yearOverYear, '#3357ff', 'yoy');
 };
 
 export default GrowthAnalytics;
+
 
 
 
