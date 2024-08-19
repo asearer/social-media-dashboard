@@ -11,6 +11,14 @@ const growthData = {
 };
 
 const GrowthAnalytics = () => {
+  const svgRef = React.useRef();
+
+  React.useEffect(() => {
+    if (svgRef.current) {
+      drawLineChart(svgRef.current, growthData);
+    }
+  }, [svgRef, growthData]);
+
   return (
     <Container maxWidth="md" component={Paper} style={{ 
       padding: 20, 
@@ -56,7 +64,7 @@ const GrowthAnalytics = () => {
       </Box>
 
       {/* Line chart */}
-      <svg ref={node => drawLineChart(node, growthData)} style={{ width: '100%', height: 300 }}></svg>
+      <svg ref={svgRef} style={{ width: '100%', height: 300 }}></svg>
 
       <Typography 
         variant="h6" 
@@ -94,7 +102,7 @@ const drawLineChart = (node, data) => {
 
   const svg = d3.select(node);
   const width = svg.node().parentElement.clientWidth;
-  const height = svg.node().parentElement.clientHeight;
+  const height = svg.node().clientHeight;
 
   const margin = { top: 20, right: 20, bottom: 30, left: 40 };
   const innerWidth = width - margin.left - margin.right;
@@ -102,10 +110,12 @@ const drawLineChart = (node, data) => {
 
   const xScale = d3.scalePoint()
     .domain(data.services)
-    .range([0, innerWidth]);
+    .range([0, innerWidth])
+    .padding(0.5);
 
+  // Set yScale to a fixed range from 0 to 50
   const yScale = d3.scaleLinear()
-    .domain([0, d3.max([...data.weekOverWeek, ...data.monthOverMonth, ...data.yearOverYear])])
+    .domain([0, 50])
     .nice()
     .range([innerHeight, 0]);
 
@@ -129,6 +139,7 @@ const drawLineChart = (node, data) => {
     .selectAll('text')
     .style('fill', '#e0e0e0');
 
+  // Week-over-Week line and points
   g.append('path')
     .datum(data.weekOverWeek)
     .attr('fill', 'none')
@@ -136,6 +147,17 @@ const drawLineChart = (node, data) => {
     .attr('stroke-width', 2)
     .attr('d', lineGenerator);
 
+  g.selectAll('.wow-point')
+    .data(data.weekOverWeek)
+    .enter()
+    .append('circle')
+    .attr('class', 'wow-point')
+    .attr('cx', (d, i) => xScale(data.services[i]))
+    .attr('cy', d => yScale(d))
+    .attr('r', 4)
+    .attr('fill', '#ff5733');
+
+  // Month-over-Month line and points
   g.append('path')
     .datum(data.monthOverMonth)
     .attr('fill', 'none')
@@ -143,14 +165,39 @@ const drawLineChart = (node, data) => {
     .attr('stroke-width', 2)
     .attr('d', lineGenerator);
 
+  g.selectAll('.mom-point')
+    .data(data.monthOverMonth)
+    .enter()
+    .append('circle')
+    .attr('class', 'mom-point')
+    .attr('cx', (d, i) => xScale(data.services[i]))
+    .attr('cy', d => yScale(d))
+    .attr('r', 4)
+    .attr('fill', '#33ff57');
+
+  // Year-over-Year line and points
   g.append('path')
     .datum(data.yearOverYear)
     .attr('fill', 'none')
     .attr('stroke', '#3357ff')
     .attr('stroke-width', 2)
     .attr('d', lineGenerator);
+
+  g.selectAll('.yoy-point')
+    .data(data.yearOverYear)
+    .enter()
+    .append('circle')
+    .attr('class', 'yoy-point')
+    .attr('cx', (d, i) => xScale(data.services[i]))
+    .attr('cy', d => yScale(d))
+    .attr('r', 4)
+    .attr('fill', '#3357ff');
 };
 
 export default GrowthAnalytics;
+
+
+
+
 
 
