@@ -11,7 +11,6 @@ const growthData = {
 };
 
 const GrowthAnalytics = () => {
-
   return (
     <Container maxWidth="md" component={Paper} style={{ 
       padding: 20, 
@@ -28,12 +27,35 @@ const GrowthAnalytics = () => {
         Growth Analytics
       </Typography>
 
-      <Box display="flex" justifyContent="space-between" marginBottom={2}>
-        <Typography variant="body1" style={{ color: '#ff5733' }}>Week-over-Week Growth</Typography>
-        <Typography variant="body1" style={{ color: '#33ff57' }}>Month-over-Month Growth</Typography>
-        <Typography variant="body1" style={{ color: '#3357ff' }}>Year-over-Year Growth</Typography>
+      {/* Legend with colored lines */}
+      <Box display="flex" justifyContent="space-between" alignItems="center" marginBottom={2}>
+        <Box display="flex" alignItems="center">
+          <svg width="20" height="10">
+            <line x1="0" y1="5" x2="20" y2="5" stroke="#ff5733" strokeWidth="2"/>
+          </svg>
+          <Typography variant="body1" style={{ color: '#ff5733', marginLeft: 8 }}>
+            Week-over-Week Growth
+          </Typography>
+        </Box>
+        <Box display="flex" alignItems="center">
+          <svg width="20" height="10">
+            <line x1="0" y1="5" x2="20" y2="5" stroke="#33ff57" strokeWidth="2"/>
+          </svg>
+          <Typography variant="body1" style={{ color: '#33ff57', marginLeft: 8 }}>
+            Month-over-Month Growth
+          </Typography>
+        </Box>
+        <Box display="flex" alignItems="center">
+          <svg width="20" height="10">
+            <line x1="0" y1="5" x2="20" y2="5" stroke="#3357ff" strokeWidth="2"/>
+          </svg>
+          <Typography variant="body1" style={{ color: '#3357ff', marginLeft: 8 }}>
+            Year-over-Year Growth
+          </Typography>
+        </Box>
       </Box>
 
+      {/* Line chart */}
       <svg ref={node => drawLineChart(node, growthData)} style={{ width: '100%', height: 300 }}></svg>
 
       <Typography 
@@ -130,4 +152,5 @@ const drawLineChart = (node, data) => {
 };
 
 export default GrowthAnalytics;
+
 
