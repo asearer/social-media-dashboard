@@ -42,7 +42,7 @@ To set up and run the **Social Media Analytics Dashboard** locally, follow these
 
 1. **Clone the Repository**:
    ```bash
-   git clone https://github.com/your-username/social-media-dashboard.git
+   git clone https://github.com/asearer/social-media-dashboard.git
    cd social-media-dashboard
    ```
 
