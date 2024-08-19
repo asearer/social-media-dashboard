@@ -24,7 +24,7 @@ const Analytics = () => {
         gutterBottom 
         style={{ color: '#e0e0e0', fontFamily: '"Roboto", sans-serif', fontWeight: 700 }}
       >
-        Analytics Overview
+        Analytics Overview (Reach)
       </Typography>
       <BarChart data={analyticsData} />
     </Container>

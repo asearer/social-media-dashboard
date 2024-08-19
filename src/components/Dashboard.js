@@ -39,7 +39,7 @@ const Dashboard = () => {
         Social Media Dashboard
       </Typography>
       <Typography variant="h6" gutterBottom style={{ color: '#e0e0e0' }}>
-        Analytics Overview
+        Analytics Overview (Accounts)
       </Typography>
       <BarChart data={data} />
       <PostScheduler />
