@@ -1,5 +1,5 @@
 import React from 'react';
-import BarChart from './BarChart';
+import PieChart from './PieChart';
 import { Container, Paper, Typography } from '@mui/material';
 
 // Sample analytics data
@@ -26,12 +26,14 @@ const Analytics = () => {
       >
         Analytics Overview (Reach)
       </Typography>
-      <BarChart data={analyticsData} />
+      <PieChart data={analyticsData} />
     </Container>
   );
 };
 
 export default Analytics;
+
+
 
 
 

@@ -36,28 +36,21 @@ const BarChart = ({ data }) => {
     const g = svg.append('g')
       .attr('transform', `translate(${margin.left},${margin.top})`);
 
-    // Draw bars
+    // Draw bars with animation
     g.selectAll('rect')
       .data(data)
       .enter()
       .append('rect')
       .attr('x', d => xScale(d.label))
-      .attr('y', d => yScale(d.value))
+      .attr('y', heightAdjusted)  // Start bars from the bottom
       .attr('width', xScale.bandwidth())
-      .attr('height', d => heightAdjusted - yScale(d.value))
+      .attr('height', 0)  // Start with height 0
       .attr('fill', 'steelblue')
-      .on('mouseover', function(event, d) {
-        d3.select(this).attr('fill', 'orange');
-        tooltip.style('visibility', 'visible').text(`${d.label}: ${d.value}`);
-      })
-      .on('mousemove', function(event) {
-        tooltip.style('top', (event.pageY - 10) + 'px')
-               .style('left', (event.pageX + 10) + 'px');
-      })
-      .on('mouseout', function() {
-        d3.select(this).attr('fill', 'steelblue');
-        tooltip.style('visibility', 'hidden');
-      });
+      .transition()
+      .duration(800)
+      .ease(d3.easeCubic)
+      .attr('y', d => yScale(d.value))
+      .attr('height', d => heightAdjusted - yScale(d.value));
 
     // Add X-axis
     g.append('g')
@@ -115,6 +108,7 @@ const BarChart = ({ data }) => {
 };
 
 export default BarChart;
+
 
 
 

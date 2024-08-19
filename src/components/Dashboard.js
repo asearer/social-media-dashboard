@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import BarChart from './BarChart'; 
 import PostScheduler from './PostScheduler'; 
 import Analytics from './Analytics'; 
+import GrowthAnalytics from './GrowthAnalytics'; // Import the GrowthAnalytics component
 import { Container, Typography, Paper } from '@mui/material';
 
 // Sample data
@@ -35,20 +36,55 @@ const Dashboard = () => {
       borderRadius: 12, 
       boxShadow: '0 8px 16px rgba(0, 0, 0, 0.3)' 
     }}>
-      <Typography variant="h4" gutterBottom style={{ color: '#e0e0e0', fontFamily: '"Roboto", sans-serif', fontWeight: 700 }}>
+      <Typography 
+        variant="h4" 
+        gutterBottom 
+        style={{ color: '#e0e0e0', fontFamily: '"Roboto", sans-serif', fontWeight: 700 }}
+      >
         Social Media Dashboard
       </Typography>
-      <Typography variant="h6" gutterBottom style={{ color: '#e0e0e0' }}>
+      
+      <Typography 
+        variant="h6" 
+        gutterBottom 
+        style={{ color: '#e0e0e0' }}
+      >
         Analytics Overview (Accounts)
       </Typography>
       <BarChart data={data} />
+
+      <Typography 
+        variant="h6" 
+        gutterBottom 
+        style={{ color: '#e0e0e0', marginTop: 40 }}
+      >
+        Scheduled Posts
+      </Typography>
       <PostScheduler />
+
+      <Typography 
+        variant="h6" 
+        gutterBottom 
+        style={{ color: '#e0e0e0', marginTop: 40 }}
+      >
+        Overall Analytics
+      </Typography>
       <Analytics />
+
+      <Typography 
+        variant="h6" 
+        gutterBottom 
+        style={{ color: '#e0e0e0', marginTop: 40 }}
+      >
+        Growth Analytics
+      </Typography>
+      <GrowthAnalytics />  {/* Integrate the GrowthAnalytics component */}
     </Container>
   );
 };
 
 export default Dashboard;
+
 
 
 
