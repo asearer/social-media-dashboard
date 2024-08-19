@@ -1,6 +1,3 @@
-Certainly! Here's a `README.md` for your Social Media Analytics Dashboard based on the provided template:
-
-```markdown
 # Social Media Analytics Dashboard
 
 ## Overview
