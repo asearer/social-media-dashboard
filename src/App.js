@@ -1,25 +1,33 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import { Container, Typography, CssBaseline } from '@mui/material';
+import Auth from './components/Auth';
+import Dashboard from './components/Dashboard';
 
 function App() {
+  const [authenticated, setAuthenticated] = useState(false);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Container maxWidth="lg">
+      <CssBaseline />
+      {authenticated ? (
+        <Dashboard />
+      ) : (
+        <div>
+          <Typography variant="h2" gutterBottom>
+            Social Media Dashboard
+          </Typography>
+          <Typography variant="h6" gutterBottom>
+            Please log in to access the dashboard.
+          </Typography>
+          <Auth onLogin={setAuthenticated} />
+        </div>
+      )}
+    </Container>
   );
 }
 
 export default App;
+
+
+
+
