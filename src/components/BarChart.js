@@ -7,10 +7,14 @@ const BarChart = ({ data }) => {
 
   useEffect(() => {
     const svg = d3.select(ref.current);
-    const containerWidth = svg.node().parentElement.clientWidth;
+    const containerWidth = svg.node().parentElement.clientWidth; // Responsive width
     const height = 300;
 
-    const margin = { top: 20, right: 20, bottom: 60, left: 50 }; // Adjusted bottom margin
+    // Set the SVG dimensions
+    svg.attr('width', containerWidth)
+       .attr('height', height);
+
+    const margin = { top: 20, right: 20, bottom: 30, left: 40 };
     const width = containerWidth - margin.left - margin.right;
     const heightAdjusted = height - margin.top - margin.bottom;
 
@@ -56,26 +60,18 @@ const BarChart = ({ data }) => {
       });
 
     // Add X-axis
-    const xAxis = g.append('g')
+    g.append('g')
       .attr('transform', `translate(0,${heightAdjusted})`)
-      .call(d3.axisBottom(xScale).tickSize(0)) // Remove tick lines
-      .selectAll('text')
-      .style('font-size', '12px')
-      .style('fill', '#e0e0e0'); // Lighter text color for readability
+      .call(d3.axisBottom(xScale));
 
     // Add Y-axis
     g.append('g')
-      .call(d3.axisLeft(yScale).tickSize(0)) // Remove tick lines
-      .selectAll('text')
-      .style('font-size', '12px')
-      .style('fill', '#e0e0e0'); // Lighter text color for readability
+      .call(d3.axisLeft(yScale));
 
     // Add axis labels
-    xAxis.append('text')
-      .attr('transform', `translate(${width / 2},${margin.bottom - 5})`)
+    g.append('text')
+      .attr('transform', `translate(${width / 2},${heightAdjusted + margin.bottom - 10})`)
       .style('text-anchor', 'middle')
-      .style('font-size', '14px')
-      .style('fill', '#e0e0e0') // Lighter text color for readability
       .text('Category');
 
     g.append('text')
@@ -83,17 +79,14 @@ const BarChart = ({ data }) => {
       .attr('y', 0 - margin.left)
       .attr('x', 0 - (heightAdjusted / 2))
       .style('text-anchor', 'middle')
-      .style('font-size', '14px')
-      .style('fill', '#e0e0e0') // Lighter text color for readability
       .text('Value');
 
     // Create tooltip
     const tooltip = d3.select('body').append('div')
       .style('position', 'absolute')
       .style('visibility', 'hidden')
-      .style('background', '#333')
-      .style('color', '#fff')
-      .style('border', '1px solid #555')
+      .style('background', '#f9f9f9')
+      .style('border', '1px solid #d3d3d3')
       .style('padding', '5px')
       .style('border-radius', '3px');
 
@@ -101,13 +94,12 @@ const BarChart = ({ data }) => {
     const handleResize = () => {
       const newWidth = svg.node().parentElement.clientWidth;
       svg.attr('width', newWidth);
-      const newWidthAdjusted = newWidth - margin.left - margin.right;
-      xScale.range([0, newWidthAdjusted]);
-      xAxis.call(d3.axisBottom(xScale).ticks(newWidthAdjusted / 80));
-
-      // Update axis labels
-      xAxis.select('text')
-        .attr('transform', `translate(${newWidthAdjusted / 2},${margin.bottom - 5})`);
+      // Update scales, axes, and bars
+      xScale.range([0, newWidth - margin.left - margin.right]);
+      svg.selectAll('rect')
+        .attr('x', d => xScale(d.label))
+        .attr('width', xScale.bandwidth());
+      g.select('g').call(d3.axisBottom(xScale).ticks(newWidth / 80));
     };
 
     window.addEventListener('resize', handleResize);
@@ -116,17 +108,13 @@ const BarChart = ({ data }) => {
   }, [data]);
 
   return (
-    <Container maxWidth="md" component={Paper} style={{ padding: 20, marginTop: 20, background: '#2e2e2e', borderRadius: 12, boxShadow: '0 8px 16px rgba(0, 0, 0, 0.3)' }}>
+    <Container maxWidth="md" component={Paper} style={{ padding: 20, marginTop: 20 }}>
       <svg ref={ref}></svg>
     </Container>
   );
 };
 
 export default BarChart;
-
-
-
-
 
 
 
